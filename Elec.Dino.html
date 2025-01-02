@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Delegados</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: white;
+            color: #333;
+        }
+        .container {
+            width: 75%; /* Ocupa el 75% del ancho de la página */
+            margin: 0 auto; /* Centra el contenedor */
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #4CAF50;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .logo {
+            display: flex;
+            justify-content: center; /* Centra horizontalmente */
+            align-items: center; /* Centra verticalmente */
+            margin-bottom: 20px;
+        }
+        .logo img {
+            max-width: 300px; /* Ajusta el tamaño máximo de la imagen */
+            height: auto;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: inline-block;
+            width: 150px;
+            font-weight: bold;
+        }
+        input {
+            width: 100px;
+            padding: 8px;
+            margin-right: 10px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            padding: 10px;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            opacity: 0.9;
+        }
+        .increment-button {
+            width: 40px;
+            background-color: #4CAF50;
+        }
+        .increment-button:hover {
+            background-color: #45a049;
+        }
+        .decrement-button {
+            width: 40px;
+            background-color: #f44336;
+        }
+        .decrement-button:hover {
+            background-color: #d32f2f;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 12px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        .error {
+            color: red;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        .highlight {
+            color: red;
+            font-weight: bold;
+        }
+        .delegados-total {
+            color: blue;
+            font-weight: bold;
+        }
+        .botones {
+            display: flex;
+            gap: 10px;
+        }
+        /* Estilo para el botón Calcular */
+        .calcular-button {
+            width: calc(100% - 10px); /* Ocupa el ancho del contenedor menos el margen */
+            margin-top: 10px; /* Espacio superior */
+            background-color: #333; /* Fondo oscuro */
+        }
+        .calcular-button:hover {
+            background-color: #555; /* Fondo oscuro más claro al pasar el ratón */
+        }
+        .coeficiente {
+            margin-top: 10px;
+            font-weight: bold;
+            color: #4CAF50;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Calculadora de Delegados</h1>
+        <!-- Logo de CCOO -->
+        <div class="logo">
+            <img src="https://canarias.ccoo.es/4d86175820b03cb590f0445f706defa4000069.png" alt="Logo de CCOO">
+        </div>
+
+        <!-- Campos de entrada -->
+        <form id="calculatorForm">
+            <div class="form-group">
+                <label for="delegados">Delegados a elegir:</label>
+                <input type="number" id="delegados" name="delegados" value="0" required>
+            </div>
+
+            <div class="form-group">
+                <label for="ccoo">Votos CCOO:</label>
+                <input type="number" id="ccoo" name="ccoo" value="0" required>
+                <button type="button" class="decrement-button" onclick="decrementarVotos('ccoo')">-</button>
+                <button type="button" class="increment-button" onclick="incrementarVotos('ccoo')">+</button>
+            </div>
+
+            <div class="form-group">
+                <label for="ugt">Votos UGT:</label>
+                <input type="number" id="ugt" name="ugt" value="0" required>
+                <button type="button" class="decrement-button" onclick="decrementarVotos('ugt')">-</button>
+                <button type="button" class="increment-button" onclick="incrementarVotos('ugt')">+</button>
+            </div>
+
+            <div class="form-group">
+                <label for="sb">Votos SB:</label>
+                <input type="number" id="sb" name="sb" value="0" required>
+                <button type="button" class="decrement-button" onclick="decrementarVotos('sb')">-</button>
+                <button type="button" class="increment-button" onclick="incrementarVotos('sb')">+</button>
+            </div>
+
+            <div class="form-group">
+                <label for="sitca">Votos SITCA:</label>
+                <input type="number" id="sitca" name="sitca" value="0" required>
+                <button type="button" class="decrement-button" onclick="decrementarVotos('sitca')">-</button>
+                <button type="button" class="increment-button" onclick="incrementarVotos('sitca')">+</button>
+            </div>
+
+            <div class="form-group">
+                <label for="votosBlanco">Votos en blanco:</label>
+                <input type="number" id="votosBlanco" name="votosBlanco" value="0" required>
+                <button type="button" class="decrement-button" onclick="decrementarVotos('votosBlanco')">-</button>
+                <button type="button" class="increment-button" onclick="incrementarVotos('votosBlanco')">+</button>
+            </div>
+
+            <div class="form-group">
+                <label for="votosNulos">Votos nulos:</label>
+                <input type="number" id="votosNulos" name="votosNulos" value="0" required>
+                <button type="button" class="decrement-button" onclick="decrementarVotos('votosNulos')">-</button>
+                <button type="button" class="increment-button" onclick="incrementarVotos('votosNulos')">+</button>
+            </div>
+
+            <!-- Botón Calcular con nuevo estilo -->
+            <button type="button" onclick="calcularDelegados()" class="calcular-button">Calcular</button>
+        </form>
+
+        <!-- Resultados -->
+        <div class="result" id="resultado">
+            <h2>Resultados:</h2>
+            <table id="tablaResultados">
+                <thead>
+                    <tr>
+                        <th>Sindicato</th>
+                        <th>CCOO</th>
+                        <th>UGT</th>
+                        <th>SB</th>
+                        <th>SITCA</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th>Votos</th>
+                        <td id="votosCCOO">0</td>
+                        <td id="votosUGT">0</td>
+                        <td id="votosSB">0</td>
+                        <td id="votosSITCA">0</td>
+                    </tr>
+                    <tr>
+                        <th>Porcentaje</th>
+                        <td id="porcentajeCCOO">0%</td>
+                        <td id="porcentajeUGT">0%</td>
+                        <td id="porcentajeSB">0%</td>
+                        <td id="porcentajeSITCA">0%</td>
+                    </tr>
+                    <tr>
+                        <th>Delegados</th>
+                        <td id="delegadosCCOO">0</td>
+                        <td id="delegadosUGT">0</td>
+                        <td id="delegadosSB">0</td>
+                        <td id="delegadosSITCA">0</td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th>Total de Votos</th>
+                        <th colspan="4" id="totalVotos">0</th>
+                    </tr>
+                </tfoot>
+            </table>
+            <!-- Mostrar el coeficiente -->
+            <div class="coeficiente" id="coeficienteResultado"></div>
+            <div class="error" id="mensajeError"></div>
+        </div>
+
+        <!-- Botón "Restablecer Campos" -->
+        <div class="botones">
+            <button type="button" onclick="restablecerCampos()" style="background-color: #ff9800;">Restablecer Campos</button>
+        </div>
+    </div>
+
+    <script>
+        // Array para almacenar los registros de votos
+        let registros = [];
+
+        // Función para incrementar los votos de un sindicato
+        function incrementarVotos(sindicato) {
+            const input = document.getElementById(sindicato);
+            input.value = parseInt(input.value) + 1;
+            guardarRegistro(sindicato, parseInt(input.value));
+        }
+
+        // Función para decrementar los votos de un sindicato
+        function decrementarVotos(sindicato) {
+            const input = document.getElementById(sindicato);
+            if (parseInt(input.value) > 0) {
+                input.value = parseInt(input.value) - 1;
+                guardarRegistro(sindicato, parseInt(input.value));
+            }
+        }
+
+        // Función para guardar un registro en el array
+        function guardarRegistro(sindicato, valor) {
+            registros.push({ sindicato, valor });
+        }
+
+        // Función para restablecer todos los campos a cero
+        function restablecerCampos() {
+            document.getElementById('delegados').value = 0;
+            document.getElementById('ccoo').value = 0;
+            document.getElementById('ugt').value = 0;
+            document.getElementById('sb').value = 0;
+            document.getElementById('sitca').value = 0;
+            document.getElementById('votosBlanco').value = 0;
+            document.getElementById('votosNulos').value = 0;
+
+            // Limpiar resultados
+            document.getElementById('votosCCOO').textContent = 0;
+            document.getElementById('votosUGT').textContent = 0;
+            document.getElementById('votosSB').textContent = 0;
+            document.getElementById('votosSITCA').textContent = 0;
+
+            document.getElementById('porcentajeCCOO').textContent = "0%";
+            document.getElementById('porcentajeUGT').textContent = "0%";
+            document.getElementById('porcentajeSB').textContent = "0%";
+            document.getElementById('porcentajeSITCA').textContent = "0%";
+
+            document.getElementById('delegadosCCOO').textContent = 0;
+            document.getElementById('delegadosUGT').textContent = 0;
+            document.getElementById('delegadosSB').textContent = 0;
+            document.getElementById('delegadosSITCA').textContent = 0;
+
+            document.getElementById('totalVotos').textContent = 0;
+            document.getElementById('mensajeError').innerHTML = "";
+
+            // Limpiar el coeficiente
+            document.getElementById('coeficienteResultado').textContent = "";
+
+            // Limpiar el array de registros
+            registros = [];
+        }
+
+        function calcularDelegados() {
+            // Obtener los valores de los campos (si no se ingresa nada, el valor predeterminado es 0)
+            const delegados = parseInt(document.getElementById('delegados').value) || 0;
+            const votosCCOO = parseInt(document.getElementById('ccoo').value) || 0;
+            const votosUGT = parseInt(document.getElementById('ugt').value) || 0;
+            const votosSB = parseInt(document.getElementById('sb').value) || 0;
+            const votosSITCA = parseInt(document.getElementById('sitca').value) || 0;
+            const votosBlanco = parseInt(document.getElementById('votosBlanco').value) || 0;
+            const votosNulos = parseInt(document.getElementById('votosNulos').value) || 0;
+
+            // Calcular el total de votos
+            const votosTotales = votosCCOO + votosUGT + votosSB + votosSITCA + votosBlanco + votosNulos;
+
+            // Mostrar el total de votos en la tabla
+            document.getElementById('totalVotos').textContent = votosTotales;
+
+            // Calcular votos válidos
+            const votosValidos = votosTotales - votosBlanco - votosNulos;
+
+            if (votosValidos <= 0) {
+                document.getElementById('mensajeError').innerHTML = "No hay votos válidos para calcular los delegados.";
+                return;
+            } else {
+                document.getElementById('mensajeError').innerHTML = "";
+            }
+
+            // Calcular el porcentaje de votos para cada sindicato
+            const porcentajeCCOO = ((votosCCOO / votosValidos) * 100).toFixed(2);
+            const porcentajeUGT = ((votosUGT / votosValidos) * 100).toFixed(2);
+            const porcentajeSB = ((votosSB / votosValidos) * 100).toFixed(2);
+            const porcentajeSITCA = ((votosSITCA / votosValidos) * 100).toFixed(2);
+
+            // Filtrar sindicatos que tienen al menos el 5% de los votos
+            const sindicatos = [
+                { nombre: 'CCOO', votos: votosCCOO, porcentaje: porcentajeCCOO },
+                { nombre: 'UGT', votos: votosUGT, porcentaje: porcentajeUGT },
+                { nombre: 'SB', votos: votosSB, porcentaje: porcentajeSB },
+                { nombre: 'SITCA', votos: votosSITCA, porcentaje: porcentajeSITCA }
+            ];
+
+            const sindicatosValidos = sindicatos.filter(s => parseFloat(s.porcentaje) >= 5);
+
+            if (sindicatosValidos.length === 0) {
+                document.getElementById('mensajeError').innerHTML = "Ningún sindicato alcanzó el 5% de los votos válidos.";
+                return;
+            }
+
+            // Calcular el coeficiente basado en los votos válidos de los sindicatos que alcanzaron el 5%
+            const votosValidosFiltrados = sindicatosValidos.reduce((total, s) => total + s.votos, 0);
+            const coeficiente = votosValidosFiltrados / delegados;
+
+            // Mostrar el coeficiente
+            document.getElementById('coeficienteResultado').textContent = `Coeficiente: ${coeficiente.toFixed(2)}`;
+
+            // Calcular delegados para cada sindicato válido
+            const resultados = sindicatosValidos.map(s => ({
+                ...s,
+                delegados: Math.round(s.votos / coeficiente)
+            }));
+
+            // Calcular la suma de los delegados asignados
+            let sumaDelegados = resultados.reduce((total, s) => total + s.delegados, 0);
+
+            // Si la suma no es igual al número de delegados a elegir, repartir el resto
+            if (sumaDelegados !== delegados) {
+                const diferencia = delegados - sumaDelegados;
+
+                // Asignar el resto al sindicato con el mayor residuo en la división
+                const sindicatoConMayorResiduo = resultados.reduce((prev, curr) => {
+                    const residuoPrev = prev.votos / coeficiente - prev.delegados;
+                    const residuoCurr = curr.votos / coeficiente - curr.delegados;
+                    return residuoCurr > residuoPrev ? curr : prev;
+                });
+
+                sindicatoConMayorResiduo.delegados += diferencia;
+            }
+
+            // Mostrar resultados en la tabla
+            document.getElementById('votosCCOO').textContent = votosCCOO;
+            document.getElementById('votosUGT').textContent = votosUGT;
+            document.getElementById('votosSB').textContent = votosSB;
+            document.getElementById('votosSITCA').textContent = votosSITCA;
+
+            document.getElementById('porcentajeCCOO').innerHTML = porcentajeCCOO + "%";
+            document.getElementById('porcentajeUGT').innerHTML = porcentajeUGT + "%";
+            document.getElementById('porcentajeSB').innerHTML = porcentajeSB + "%";
+            document.getElementById('porcentajeSITCA').innerHTML = porcentajeSITCA + "%";
+
+            // Mostrar delegados solo para sindicatos válidos
+            document.getElementById('delegadosCCOO').textContent = resultados.find(s => s.nombre === 'CCOO')?.delegados || 0;
+            document.getElementById('delegadosUGT').textContent = resultados.find(s => s.nombre === 'UGT')?.delegados || 0;
+            document.getElementById('delegadosSB').textContent = resultados.find(s => s.nombre === 'SB')?.delegados || 0;
+            document.getElementById('delegadosSITCA').textContent = resultados.find(s => s.nombre === 'SITCA')?.delegados || 0;
+
+            // Aplicar la clase .highlight al porcentaje con la décima más alta
+            const decimas = [porcentajeCCOO.split('.')[1], porcentajeUGT.split('.')[1], porcentajeSB.split('.')[1], porcentajeSITCA.split('.')[1]];
+            const decimaMasAlta = Math.max(...decimas.map(d => parseInt(d)));
+
+            if (parseInt(porcentajeCCOO.split('.')[1]) === decimaMasAlta) {
+                document.getElementById('porcentajeCCOO').classList.add('highlight');
+            } else {
+                document.getElementById('porcentajeCCOO').classList.remove('highlight');
+            }
+            if (parseInt(porcentajeUGT.split('.')[1]) === decimaMasAlta) {
+                document.getElementById('porcentajeUGT').classList.add('highlight');
+            } else {
+                document.getElementById('porcentajeUGT').classList.remove('highlight');
+            }
+            if (parseInt(porcentajeSB.split('.')[1]) === decimaMasAlta) {
+                document.getElementById('porcentajeSB').classList.add('highlight');
+            } else {
+                document.getElementById('porcentajeSB').classList.remove('highlight');
+            }
+            if (parseInt(porcentajeSITCA.split('.')[1]) === decimaMasAlta) {
+                document.getElementById('porcentajeSITCA').classList.add('highlight');
+            } else {
+                document.getElementById('porcentajeSITCA').classList.remove('highlight');
+            }
+
+            // Mostrar delegados y aplicar la clase .delegados-total
+            const delegadosCells = document.querySelectorAll("#delegadosCCOO, #delegadosUGT, #delegadosSB, #delegadosSITCA");
+            delegadosCells.forEach(cell => cell.classList.add('delegados-total'));
+        }
+    </script>
+</body>
+</html>
